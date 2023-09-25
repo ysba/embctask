@@ -1,0 +1,27 @@
+{
+	"main_task": "app",
+	"sub_tasks": [
+		{
+			"name": "init",
+			"states": [
+				"message",
+				"wait"
+			]
+		},
+		{
+			"name": "run",
+			"states": [
+				"read_sensor",
+				"serial_tx",
+				"serial_rx"
+			]
+		},
+		{
+			"name": "result",
+			"states": [
+				"success",
+				"error"
+			]
+		}
+	]
+} 
