@@ -89,8 +89,7 @@ To used it, please do as in the following C code snippet:
 
 ```C
 #include <stdlib.h>
-#include "app_complex.h"
-#include "tick.h"
+#include "app_complex/app_complex.h"
 // place other includes here
 
 int main() {
