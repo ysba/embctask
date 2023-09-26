@@ -1,11 +1,33 @@
 {
 	"main_task": "app_complex",
-	"states": [
-		"init",
-		"do_something_1",
-		"do_something_2",
-		"do_something_3",
-		"do_something_4",
-		"restart"
+	"sub_tasks": [
+		{
+			"name": "init",
+			"states": [
+				"message",
+				"do_something_1",
+				"do_something_2",
+				"wait"
+			]
+		},
+		{
+			"name": "run",
+			"states": [
+				"read_sensor",
+				"serial_tx",
+				"serial_rx",
+				"do_something_1",
+				"do_something_2",
+				"do_something_3",
+				"do_something_4"
+			]
+		},
+		{
+			"name": "result",
+			"states": [
+				"success",
+				"error"
+			]
+		}
 	]
 }
