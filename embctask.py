@@ -7,7 +7,6 @@ class EmbCTask:
     def __init__(self, config_path):
         self.config_path = config_path
         self.output_path = "output"
-        os.makedirs(self.output_path, exist_ok=True)
 
 
     def gen_task_source(self):
@@ -70,18 +69,15 @@ class EmbCTask:
                 source = file_handle.read()
             source = source.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
             source = source.replace("[[SUB_TASK_NAME_LOWERCASE]]", sub_task["name"])
-            state_list = f"{self.config['main_task'].upper()}_STATE_{sub_task['name'].upper()}_{sub_task['states'][0].upper()} = 0,\n\t"
+            state_list = f"{self.config['main_task'].upper()}_SUB_STATE_{sub_task['name'].upper()}_{sub_task['states'][0].upper()} = 0,\n\t"
             for sub_state in sub_task["states"][1:]:
                 state_list += f"{self.config['main_task'].upper()}_SUB_STATE_{sub_task['name'].upper()}_{sub_state.upper()},\n\t"
             source = source.replace("[[SUB_TASK_STATE_LIST]]", state_list)
             sub_task_cases = ""
             for sub_state in sub_task["states"]:
                 temp = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
-                temp = temp.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
                 temp = temp.replace("[[SUB_TASK_NAME_UPPERCASE]]", sub_task["name"].upper())
-                temp = temp.replace("[[SUB_TASK_NAME_LOWERCASE]]", sub_task["name"])
                 temp = temp.replace("[[SUB_TASK_STATE_UPPERCASE]]", sub_state.upper())
-                temp = temp.replace("[[SUB_TASK_STATE_LOWERCASE]]", sub_state)
                 sub_task_cases += temp
             source = source.replace("[[SUB_TASK_CASES]]", sub_task_cases)
             with open(f"{self.output_path}/{self.config['main_task']}_{sub_task['name']}.c", "w") as file_handle:
@@ -93,7 +89,10 @@ class EmbCTask:
     def run(self):
         with open(self.config_path, "r") as file_handle:
             self.config = json.load(file_handle)
-        
+
+        self.output_path += f"/{self.config['main_task']}"
+        os.makedirs(self.output_path, exist_ok=True)
+
         self.gen_task_source()
         self.gen_task_header()
         self.gen_task_private_source()

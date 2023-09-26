@@ -1,6 +1,7 @@
 #ifndef __[[MAIN_TASK_NAME_UPPERCASE]]_PRIVATE__
 #define __[[MAIN_TASK_NAME_UPPERCASE]]_PRIVATE__
 
+#include "tick.h"
 
 typedef enum {
     [[MAIN_TASK_STATE_LIST]]
