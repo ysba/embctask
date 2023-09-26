@@ -14,12 +14,12 @@ class EmbCTask:
             source = file_handle.read()
         with open("templates/main_task_cases.c", "r") as file_handle:
             case = file_handle.read()
+        case = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
+        case = case.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         source = source.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         main_task_cases = ""
         for sub_task in self.config["sub_tasks"]:
-            temp = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
-            temp = temp.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
-            temp = temp.replace("[[SUB_TASK_NAME_UPPERCASE]]", sub_task["name"].upper())
+            temp = case.replace("[[SUB_TASK_NAME_UPPERCASE]]", sub_task["name"].upper())
             temp = temp.replace("[[SUB_TASK_NAME_LOWERCASE]]", sub_task["name"])
             main_task_cases += temp
         source = source.replace("[[MAIN_TASK_CASES]]", main_task_cases)
@@ -64,6 +64,7 @@ class EmbCTask:
     def gen_sub_tasks_source(self):
         with open("templates/sub_task_cases.c", "r") as file_handle:
             case = file_handle.read()
+        case = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
         for sub_task in self.config["sub_tasks"]:
             with open("templates/sub_task.c", "r") as file_handle:
                 source = file_handle.read()
@@ -75,8 +76,7 @@ class EmbCTask:
             source = source.replace("[[SUB_TASK_STATE_LIST]]", state_list)
             sub_task_cases = ""
             for sub_state in sub_task["states"]:
-                temp = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
-                temp = temp.replace("[[SUB_TASK_NAME_UPPERCASE]]", sub_task["name"].upper())
+                temp = case.replace("[[SUB_TASK_NAME_UPPERCASE]]", sub_task["name"].upper())
                 temp = temp.replace("[[SUB_TASK_STATE_UPPERCASE]]", sub_state.upper())
                 sub_task_cases += temp
             source = source.replace("[[SUB_TASK_CASES]]", sub_task_cases)
@@ -111,7 +111,6 @@ class EmbCTask:
         header = header.replace("[[MAIN_TASK_STATE_LIST]]", state_list)
         with open(f"{self.output_path}/{self.config['main_task']}.h", "w") as file_handle:
             file_handle.write(header)
-        print(header)
 
 
     def run(self):
