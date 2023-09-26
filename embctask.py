@@ -84,6 +84,34 @@ class EmbCTask:
                 file_handle.write(source)
 
 
+    def gen_simple_task_source(self):
+        with open("templates/task_simple.c", "r") as file_handle:
+            source = file_handle.read()
+        with open("templates/simple_task_cases.c", "r") as file_handle:
+            case = file_handle.read()
+        case = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
+        source = source.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
+        simple_task_cases = ""
+        for state in self.config["states"]:
+            temp = case.replace("[[SIMPLE_TASK_STATE_UPPERCASE]]", state.upper())
+            simple_task_cases += temp
+        source = source.replace("[[MAIN_TASK_CASES]]", simple_task_cases)
+        with open(f"{self.output_path}/{self.config['main_task']}.c", "w") as file_handle:
+            file_handle.write(source)
+        
+
+    def gen_simple_task_header(self):
+        with open("templates/task_simple.h", "r") as file_handle:
+            header = file_handle.read()
+        header = header.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
+        header = header.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
+        state_list = f"{self.config['main_task'].upper()}_STATE_{self.config['states'][0].upper()} = 0,\n\t"
+        for state in self.config["states"][1:]:
+            state_list += f"{self.config['main_task'].upper()}_STATE_{state.upper()},\n\t"
+        header = header.replace("[[MAIN_TASK_STATE_LIST]]", state_list)
+        with open(f"{self.output_path}/{self.config['main_task']}.h", "w") as file_handle:
+            file_handle.write(header)
+        print(header)
 
 
     def run(self):
@@ -93,11 +121,19 @@ class EmbCTask:
         self.output_path += f"/{self.config['main_task']}"
         os.makedirs(self.output_path, exist_ok=True)
 
-        self.gen_task_source()
-        self.gen_task_header()
-        self.gen_task_private_source()
-        self.gen_task_private_header()
-        self.gen_sub_tasks_source()
+        if "sub_tasks" in self.config:
+            print("generating with sub-tasks")
+            self.gen_task_source()
+            self.gen_task_header()
+            self.gen_task_private_source()
+            self.gen_task_private_header()
+            self.gen_sub_tasks_source()
+        elif "states" in self.config:
+            print("generating single task")
+            self.gen_simple_task_source()
+            self.gen_simple_task_header()
+        else: 
+            print("error")
 
 
 
