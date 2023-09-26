@@ -36,7 +36,7 @@ The generated code contain only the structure with definition of states. User is
 The following is a JSON file used to configure ``embctask`` for generating code.
 * The application is called ``app_complex``. Any name could be used since respecting C standards.
 * The application contain 3 sub-tasks: ``init``, ``run`` and ``result``.
-* Eacho sub-task has their own states.
+* Each sub-task has their own states.
 
 ```JSON
 {
