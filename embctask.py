@@ -3,6 +3,9 @@ import os
 import json
 
 
+VERSION = "0.0.1"
+
+
 class EmbCTask:
     def __init__(self, config_path):
         self.config_path = config_path
@@ -12,6 +15,7 @@ class EmbCTask:
     def gen_task_source(self):
         with open("templates/task.c", "r") as file_handle:
             source = file_handle.read()
+        source = source.replace("[[VERSION]]", VERSION)
         with open("templates/main_task_cases.c", "r") as file_handle:
             case = file_handle.read()
         case = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
@@ -30,6 +34,7 @@ class EmbCTask:
     def gen_task_header(self):
         with open("templates/task.h", "r") as file_handle:
             header = file_handle.read()
+        header = header.replace("[[VERSION]]", VERSION)
         header = header.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
         header = header.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         with open(f"{self.output_path}/{self.config['main_task']}.h", "w") as file_handle:
@@ -39,6 +44,7 @@ class EmbCTask:
     def gen_task_private_source(self):
         with open("templates/task_private.c", "r") as file_handle:
             source = file_handle.read()
+        source = source.replace("[[VERSION]]", VERSION)
         source = source.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         with open(f"{self.output_path}/{self.config['main_task']}_private.c", "w") as file_handle:
             file_handle.write(source)
@@ -47,6 +53,7 @@ class EmbCTask:
     def gen_task_private_header(self):
         with open("templates/task_private.h", "r") as file_handle:
             header = file_handle.read()
+        header = header.replace("[[VERSION]]", VERSION)
         header = header.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
         header = header.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         state_list = f"{self.config['main_task'].upper()}_STATE_{self.config['sub_tasks'][0]['name'].upper()} = 0,\n\t"
@@ -68,6 +75,7 @@ class EmbCTask:
         for sub_task in self.config["sub_tasks"]:
             with open("templates/sub_task.c", "r") as file_handle:
                 source = file_handle.read()
+            source = source.replace("[[VERSION]]", VERSION)
             source = source.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
             source = source.replace("[[SUB_TASK_NAME_LOWERCASE]]", sub_task["name"])
             state_list = f"{self.config['main_task'].upper()}_SUB_STATE_{sub_task['name'].upper()}_{sub_task['states'][0].upper()} = 0,\n\t"
@@ -87,6 +95,7 @@ class EmbCTask:
     def gen_simple_task_source(self):
         with open("templates/task_simple.c", "r") as file_handle:
             source = file_handle.read()
+        source = source.replace("[[VERSION]]", VERSION)
         with open("templates/simple_task_cases.c", "r") as file_handle:
             case = file_handle.read()
         case = case.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
@@ -103,6 +112,7 @@ class EmbCTask:
     def gen_simple_task_header(self):
         with open("templates/task_simple.h", "r") as file_handle:
             header = file_handle.read()
+        header = header.replace("[[VERSION]]", VERSION)
         header = header.replace("[[MAIN_TASK_NAME_UPPERCASE]]", self.config["main_task"].upper())
         header = header.replace("[[MAIN_TASK_NAME_LOWERCASE]]", self.config["main_task"])
         state_list = f"{self.config['main_task'].upper()}_STATE_{self.config['states'][0].upper()} = 0,\n\t"
