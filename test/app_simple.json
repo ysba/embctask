@@ -1,10 +1,12 @@
 {
-	"main_task": "app",
+	"main_task": "app_simple",
 	"sub_tasks": [
 		{
 			"name": "init",
 			"states": [
 				"message",
+				"do_something_1",
+				"do_something_2",
 				"wait"
 			]
 		},
@@ -13,7 +15,11 @@
 			"states": [
 				"read_sensor",
 				"serial_tx",
-				"serial_rx"
+				"serial_rx",
+				"do_something_1",
+				"do_something_2",
+				"do_something_3",
+				"do_something_4"
 			]
 		},
 		{
@@ -24,4 +30,4 @@
 			]
 		}
 	]
-} 
+}
